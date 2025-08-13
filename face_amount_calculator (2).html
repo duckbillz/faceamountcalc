@@ -1,0 +1,49 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Face Amount Calculator</title>
+</head>
+<body>
+    <h1>Face Amount Calculator</h1>
+    <label for="monthlyBenefit">Monthly Benefit ($):</label>
+    <input type="number" id="monthlyBenefit" />
+    <br><br>
+    <label for="termLength">Term Length:</label>
+    <select id="termLength">
+        <option value="10 Year">10 Year</option>
+        <option value="15 Year">15 Year</option>
+        <option value="20 Year">20 Year</option>
+        <option value="25 Year">25 Year</option>
+        <option value="30 Year">30 Year</option>
+        <option value="35 Year">35 Year</option>
+        <option value="40 Year">40 Year</option>
+    </select>
+    <br><br>
+    <button onclick="calculateFaceAmount()">Calculate</button>
+    <p id="result"></p>
+
+    <script>
+        async function calculateFaceAmount() {
+            const monthlyBenefit = parseInt(document.getElementById('monthlyBenefit').value);
+            const termLength = document.getElementById('termLength').value;
+
+            try {
+                const response = await fetch('monthly_benefit_guide.json');
+                const data = await response.json();
+
+                const match = data.find(row => row["Monthly Benefit ($)"] === monthlyBenefit);
+
+                if (match && match[termLength]) {
+                    document.getElementById('result').innerText = "Face Amount: $" + match[termLength].toLocaleString();
+                } else {
+                    document.getElementById('result').innerText = "No matching data found.";
+                }
+            } catch (error) {
+                document.getElementById('result').innerText = "Error loading data.";
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>
